@@ -59,3 +59,4 @@ Icon-App-*.png
 .flatpak-builder/
 build-dir/
 lib/src/version.dart
+ios/build/

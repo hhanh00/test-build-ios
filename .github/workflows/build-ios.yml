@@ -1,0 +1,42 @@
+name: "Build iOS app"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: check Xcode version
+        run: /usr/bin/xcodebuild -version
+
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install the Apple certificate and provisioning profile
+        env:
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          security create-keychain -p R5qx5GGokNBm $HOME/build.keychain
+          security unlock-keychain -p R5qx5GGokNBm $HOME/build.keychain
+          security import ./ios/certs/Certificates.p12 -P $KEY_PASSWORD -A -t cert -f pkcs12 -k $HOME/build.keychain
+          security list-keychain -d user -s $HOME/build.keychain
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp ./ios/certs/YWallet_AppStore.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles"
+          pushd $HOME
+          git clone --branch 3.16.5 --depth 1 https://github.com/flutter/flutter.git
+          export PATH=$PATH:$HOME/flutter/bin
+          popd
+          flutter pub get
+          flutter build ipa
+
+      - name: Upload application
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: ./build/ios/archive/Runner.xcarchive
+          retention-days: 3
+
