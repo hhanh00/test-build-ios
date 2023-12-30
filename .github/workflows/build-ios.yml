@@ -18,6 +18,10 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Build vars
+        run: |
+          cat build.env >> $GITHUB_ENV
+
       - name: Build Rust
         run: |
           mkdir -p $HOME/.zcash-params
@@ -28,6 +32,8 @@ jobs:
           sed -e 's/cdylib/staticlib/' < zcash-sync/Cargo.toml >/tmp/out.toml
           mv /tmp/out.toml zcash-sync/Cargo.toml
           cargo lipo --release --features=dart_ffi --targets=aarch64-apple-ios
+          mv target/aarch64-apple-ios/release/libwarp_api_ffi.a warp_api/ios
+          cp zcash-sync/binding.h warp_api/ios/Classes
 
       - name: Install the Apple certificate and provisioning profile
         env:
@@ -40,7 +46,7 @@ jobs:
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
           cp ./ios/certs/YWallet_AppStore.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles"
           pushd $HOME
-          git clone --branch 3.16.5 --depth 1 https://github.com/flutter/flutter.git
+          git clone --branch $FLUTTER_VERSION --depth 1 https://github.com/flutter/flutter.git
           export PATH=$PATH:$HOME/flutter/bin
           popd
           flutter pub get
