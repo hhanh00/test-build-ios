@@ -1,0 +1,32 @@
+name: warp_api
+description: "A new Flutter plugin project."
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ffi: ^2.0.1
+
+dev_dependencies:
+  ffigen: ^9.0.0
+  build_runner: ^2.1.2
+
+ffigen:
+  output: 'lib/warp_api_generated.dart'
+  headers:
+    entry-points:
+      - '../zcash-sync/binding.h'
+# On MacOS
+  llvm-path:
+    - '/opt/homebrew/Cellar/llvm/16.0.6'
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: WarpApiPlugin
