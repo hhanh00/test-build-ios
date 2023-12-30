@@ -150,7 +150,7 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   url_launcher_ios: bf5ce03e0e2088bad9cc378ea97fa0ed5b49673b
-  warp_api: 1da2de408b7d2d9353c262520994ea3c103186ef
+  warp_api: 5a4dda681348a5ee0f129e3ad57b15d37969fcf0
 
 PODFILE CHECKSUM: e9d467dbc2a0a4233554c9639b00f25b0c9f82b9
 

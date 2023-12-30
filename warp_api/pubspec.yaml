@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flat_buffers: ^23.5.26
   ffi: ^2.0.1
 
 dev_dependencies:
