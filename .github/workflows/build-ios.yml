@@ -58,7 +58,7 @@ jobs:
       - name: Upload application
         uses: actions/upload-artifact@v3
         with:
-          name: app
+          name: YWallet.xcarchive
           path: ./build/ios/archive/Runner.xcarchive
           retention-days: 3
 

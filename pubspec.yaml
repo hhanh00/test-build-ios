@@ -99,16 +99,17 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^3.0.1
-  #flutter_gen: ^5.3.1
+  flutter_gen: ^5.3.1
   build_runner: ^2.1.2
   build_version:
     git: https://github.com/hhanh00/build_version_git.git
+  mobx_codegen: ^2.0.3
   flutter_launcher_icons: any
   flutter_native_splash: ^2.2.16
   msix: ^3.16.7
 
 flutter:
-
+  generate: true
   uses-material-design: true
 
   assets:
@@ -137,3 +138,15 @@ flutter_native_splash:
   color_dark: "#FFFFFF"
   color: "#000000"
   image: "assets/icon.png"
+
+flutter_intl:
+  enabled: true
+
+msix_config:
+  display_name: Ywallet
+  publisher_display_name: Parallax Scroll
+  identity_name: 38664ParallaxScroll.Ywallet
+  publisher: CN=DF596492-B1AD-4B42-9ECB-4E6208B6D8CD
+  #logo_path: assets\icon.png
+  store: true
+  capabilities: internetClient
