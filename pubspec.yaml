@@ -98,10 +98,14 @@ dependencies:
     path: warp_api
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
   flutter_lints: ^3.0.1
+  #flutter_gen: ^5.3.1
+  build_runner: ^2.1.2
+  build_version:
+    git: https://github.com/hhanh00/build_version_git.git
+  flutter_launcher_icons: any
+  flutter_native_splash: ^2.2.16
+  msix: ^3.16.7
 
 flutter:
 
@@ -123,3 +127,13 @@ flutter:
     - assets/fail.mp3
     - assets/ding.mp3
     - assets/ledger.png
+
+flutter_icons:
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/icon.png"
+
+flutter_native_splash:
+  color_dark: "#FFFFFF"
+  color: "#000000"
+  image: "assets/icon.png"

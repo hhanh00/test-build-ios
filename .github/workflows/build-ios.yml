@@ -51,6 +51,7 @@ jobs:
           export PATH=$PATH:$HOME/flutter/bin
           popd
           flutter pub get
+          dart run build_runner build -d
           (cd warp_api; flutter pub get)
           flutter build ipa
 
