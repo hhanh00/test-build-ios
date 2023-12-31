@@ -50,11 +50,9 @@ app.*.map.json
 target/
 jniLibs/
 
-ic_launcher.png
-Icon-App-*.png
 *.apk
+*.params
 
-#Cargo.lock
 .flatpak-builder/
 build-dir/
 ios/build/

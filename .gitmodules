@@ -1,3 +1,6 @@
 [submodule "zcash-sync"]
 	path = zcash-sync
 	url = https://github.com/hhanh00/zcash-sync.git
+[submodule "flutter_zxing"]
+	path = flutter_zxing
+	url = https://github.com/hhanh00/flutter_zxing.git

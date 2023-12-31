@@ -596,11 +596,9 @@ packages:
   flutter_zxing:
     dependency: "direct main"
     description:
-      path: "."
-      ref: df6e08c34d60e7cfc5232af90e26fe5290aa6d56
-      resolved-ref: df6e08c34d60e7cfc5232af90e26fe5290aa6d56
-      url: "https://github.com/hhanh00/flutter_zxing.git"
-    source: git
+      path: flutter_zxing
+      relative: true
+    source: path
     version: "1.4.1"
   font_awesome_flutter:
     dependency: "direct main"
@@ -1654,7 +1652,7 @@ packages:
       path: warp_api
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   watcher:
     dependency: transitive
     description:

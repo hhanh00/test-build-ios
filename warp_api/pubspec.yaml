@@ -1,6 +1,6 @@
 name: warp_api
-description: "A new Flutter plugin project."
-version: 0.0.1
+description: "Warp Sync API"
+version: 1.0.0
 homepage:
 
 environment:
@@ -29,5 +29,8 @@ ffigen:
 flutter:
   plugin:
     platforms:
+      android:
+        package: me.hanh.ywallet.android
+        pluginClass: WarpApiPlugin
       ios:
         pluginClass: WarpApiPlugin

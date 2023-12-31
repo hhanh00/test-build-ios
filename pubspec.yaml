@@ -23,9 +23,10 @@ dependencies:
       ref: 4bdb1126e553b474b80c8c91e9f9e43baf1e9c4e
 
   flutter_zxing:
-    git:
-      url: https://github.com/hhanh00/flutter_zxing.git
-      ref: df6e08c34d60e7cfc5232af90e26fe5290aa6d56
+    path: flutter_zxing
+    # git:
+    #   url: https://github.com/hhanh00/flutter_zxing.git
+    #   ref: df6e08c34d60e7cfc5232af90e26fe5290aa6d56
 
   http: ^1.1.2
   intl: ^0.18.0
@@ -130,6 +131,7 @@ flutter:
     - assets/ledger.png
 
 flutter_icons:
+  android: true
   ios: true
   remove_alpha_ios: true
   image_path: "assets/icon.png"

@@ -1,0 +1,67 @@
+name: "Build Android app"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build vars
+        run: |
+          cat build.env >> $GITHUB_ENV
+
+      - name: Install Android NDK
+        run: |
+          pushd /usr/local/lib/android/sdk/cmdline-tools/latest/bin
+          yes | ./sdkmanager --sdk_root=$ANDROID_SDK_ROOT "ndk;25.1.8937393"
+          popd
+          export ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/25.1.8937393
+          export ANDROID_NDK_HOME=$ANDROID_NDK_ROOT
+
+      - name: Download params
+        run: |
+          mkdir -p $HOME/.zcash-params
+          curl https://download.z.cash/downloads/sapling-output.params --output $HOME/.zcash-params/sapling-output.params
+          curl https://download.z.cash/downloads/sapling-spend.params --output $HOME/.zcash-params/sapling-spend.params
+          ln -s $HOME/.zcash-params/* assets/
+
+      - name: Build Rust
+        run: |
+          rustup target add aarch64-linux-android armv7-linux-androideabi
+          cargo install --version ^2 cargo-ndk
+          cargo ndk --target arm64-v8a build --release --features=dart_ffi
+          mkdir -p ./warp_api/android/src/main/jniLibs/arm64-v8a
+          cp ./target/aarch64-linux-android/release/libwarp_api_ffi.so ./warp_api/android/src/main/jniLibs/arm64-v8a/
+          cargo ndk --target armeabi-v7a build --release --features=dart_ffi
+          mkdir -p ./warp_api/android/src/main/jniLibs/armeabi-v7a
+          cp ./target/armv7-linux-androideabi/release/libwarp_api_ffi.so ./warp_api/android/src/main/jniLibs/armeabi-v7a/
+
+      - name: Build flutter
+        env:
+          JKS_PASSWORD: ${{ secrets.JKS_PASSWORD }}
+        run: |
+          pushd $HOME
+          git clone --branch $FLUTTER_VERSION --depth 1 https://github.com/flutter/flutter.git
+          export PATH=$PATH:$HOME/flutter/bin
+          popd
+          flutter pub get
+          dart run build_runner build -d
+          (cd warp_api; flutter pub get)
+          flutter build apk
+
+      - name: Upload application
+        uses: actions/upload-artifact@v3
+        with:
+          name: YWallet.apk
+          path: ./build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 3
+
