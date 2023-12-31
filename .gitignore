@@ -49,7 +49,6 @@ app.*.map.json
 
 target/
 jniLibs/
-*.g.dart
 
 ic_launcher.png
 Icon-App-*.png
@@ -58,5 +57,4 @@ Icon-App-*.png
 #Cargo.lock
 .flatpak-builder/
 build-dir/
-lib/src/version.dart
 ios/build/

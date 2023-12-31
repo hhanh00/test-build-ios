@@ -4,6 +4,8 @@ PODS:
   - awesome_notifications (0.8.1):
     - Flutter
     - IosAwnCore (~> 0.8.0)
+  - camera_avfoundation (0.0.1):
+    - Flutter
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
@@ -44,6 +46,10 @@ PODS:
   - Flutter (1.0.0)
   - flutter_foreground_task (0.0.1):
     - Flutter
+  - flutter_zxing (0.0.1):
+    - Flutter
+  - image_picker_ios (0.0.1):
+    - Flutter
   - IosAwnCore (0.8.0)
   - local_auth_ios (0.0.1):
     - Flutter
@@ -74,10 +80,13 @@ PODS:
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
   - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
+  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
+  - flutter_zxing (from `.symlinks/plugins/flutter_zxing/ios`)
+  - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - local_auth_ios (from `.symlinks/plugins/local_auth_ios/ios`)
   - network_info_plus (from `.symlinks/plugins/network_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -102,6 +111,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/app_links/ios"
   awesome_notifications:
     :path: ".symlinks/plugins/awesome_notifications/ios"
+  camera_avfoundation:
+    :path: ".symlinks/plugins/camera_avfoundation/ios"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
   file_picker:
@@ -110,6 +121,10 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_foreground_task:
     :path: ".symlinks/plugins/flutter_foreground_task/ios"
+  flutter_zxing:
+    :path: ".symlinks/plugins/flutter_zxing/ios"
+  image_picker_ios:
+    :path: ".symlinks/plugins/image_picker_ios/ios"
   local_auth_ios:
     :path: ".symlinks/plugins/local_auth_ios/ios"
   network_info_plus:
@@ -132,12 +147,15 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_links: 5ef33d0d295a89d9d16bb81b0e3b0d5f70d6c875
   awesome_notifications: db394d2e061e4583ba0f738ddea611e3986cc3fb
+  camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
   connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 15fd9539e4eb735dc54bae8c0534a7a9511a03de
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
+  flutter_zxing: 19a866d17c8a87ee1026d68521c69d2f008635f6
+  image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
   IosAwnCore: ed1b2b6d84962a758354dbacd9ce525c72ce28a9
   local_auth_ios: c6cf091ded637a88f24f86a8875d8b0f526e2605
   network_info_plus: 6d0c3eb8367b8164fa3fb0c19875e3f59d49697f
