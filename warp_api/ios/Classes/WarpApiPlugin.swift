@@ -16,4 +16,8 @@ public class WarpApiPlugin: NSObject, FlutterPlugin {
       result(FlutterMethodNotImplemented)
     }
   }
+
+  public static func dummyMethod() {
+    dummy_export()
+  }
 }

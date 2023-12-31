@@ -27,6 +27,7 @@ jobs:
           mkdir -p $HOME/.zcash-params
           curl https://download.z.cash/downloads/sapling-output.params --output $HOME/.zcash-params/sapling-output.params
           curl https://download.z.cash/downloads/sapling-spend.params --output $HOME/.zcash-params/sapling-spend.params
+          ln -s $HOME/.zcash-params/* assets/
           rustup target add aarch64-apple-ios
           cargo install cargo-lipo
           sed -e 's/cdylib/staticlib/' < zcash-sync/Cargo.toml >/tmp/out.toml
@@ -53,10 +54,10 @@ jobs:
           (cd warp_api; flutter pub get)
           flutter build ipa
 
-      # - name: Upload application
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: app
-      #     path: ./build/ios/archive/Runner.xcarchive
-      #     retention-days: 3
+      - name: Upload application
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: ./build/ios/archive/Runner.xcarchive
+          retention-days: 3
 
