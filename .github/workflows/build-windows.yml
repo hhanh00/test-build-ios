@@ -2,9 +2,6 @@ name: "Build Windows app"
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - "main"
 
 jobs:
   build-bin:
@@ -15,17 +12,21 @@ jobs:
         with:
           submodules: recursive
       - name: Build vars
+        shell: bash
         run: |
           cat build.env >> $GITHUB_ENV
       - name: Download params
         shell: bash
+        env: 
+          TEMP: ${{ runner.temp }}
         run: |
-          mkdir -p $HOME/.zcash-params
-          curl https://download.z.cash/downloads/sapling-output.params --output $HOME/.zcash-params/sapling-output.params
-          curl https://download.z.cash/downloads/sapling-spend.params --output $HOME/.zcash-params/sapling-spend.params
-          cp $HOME/.zcash-params/* assets/
+          mkdir -p $TEMP/.zcash-params
+          curl https://download.z.cash/downloads/sapling-output.params --output $TEMP/.zcash-params/sapling-output.params
+          curl https://download.z.cash/downloads/sapling-spend.params --output $TEMP/.zcash-params/sapling-spend.params
+          cp $TEMP/.zcash-params/* assets/
       - name: Build Rust
-        shell: bash
+        env: 
+          HOME: ${{ runner.temp }}
         run: |
           cargo b -r --features=dart_ffi,sqlcipher,ledger
       - name: Build Flutter
@@ -39,3 +40,26 @@ jobs:
           flutter pub run build_runner build -d
           (cd warp_api; flutter pub get)
           flutter build windows
+      - name: Package
+        shell: bash
+        run: |
+          export PATH=$PATH:$HOME/flutter/bin
+          cp target/release/warp_api_ffi.dll build/windows/x64/runner/release
+          pushd build/windows/x64/runner
+          mv Release ywallet
+          7z a ../../../../ywallet.zip ywallet
+          popd
+          flutter pub run msix:create
+          mv build/windows/x64/runner/Release/YWallet.msix .
+      - name: Upload zip
+        uses: actions/upload-artifact@v3
+        with:
+          name: YWallet.zip
+          path: ywallet.zip
+          retention-days: 3
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: ywallet.zip
+

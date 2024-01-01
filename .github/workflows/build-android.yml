@@ -49,10 +49,17 @@ jobs:
           dart run build_runner build -d
           (cd warp_api; flutter pub get)
           flutter build apk
-      - name: Upload application
+          flutter build appbundle
+      - name: Upload apk
         uses: actions/upload-artifact@v3
         with:
           name: YWallet.apk
           path: ./build/app/outputs/flutter-apk/app-release.apk
           retention-days: 3
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: |
+            ./build/app/outputs/flutter-apk/app-release.apk
 

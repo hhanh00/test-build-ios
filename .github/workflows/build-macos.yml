@@ -115,9 +115,14 @@ jobs:
           python3 -m pip install packaging
           npm install -g appdmg
           (cd macos; appdmg app.json ../ywallet-universal.dmg)
-      - name: Upload application
+      - name: Upload dmg
         uses: actions/upload-artifact@v3
         with:
           name: YWallet.dmg
           path: ywallet-universal.dmg
           retention-days: 3
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: ywallet-universal.dmg
