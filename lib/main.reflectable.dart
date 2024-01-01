@@ -2,7 +2,7 @@
 // https://github.com/dart-lang/reflectable.
 
 import 'dart:core';
-import 'package:t/pages/utils.dart' as prefix0;
+import 'package:ywallet/pages/utils.dart' as prefix0;
 
 // ignore_for_file: camel_case_types
 // ignore_for_file: implementation_imports
