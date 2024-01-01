@@ -1,0 +1,41 @@
+name: "Build Windows app"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build-bin:
+    runs-on: windows-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Build vars
+        run: |
+          cat build.env >> $GITHUB_ENV
+      - name: Download params
+        shell: bash
+        run: |
+          mkdir -p $HOME/.zcash-params
+          curl https://download.z.cash/downloads/sapling-output.params --output $HOME/.zcash-params/sapling-output.params
+          curl https://download.z.cash/downloads/sapling-spend.params --output $HOME/.zcash-params/sapling-spend.params
+          cp $HOME/.zcash-params/* assets/
+      - name: Build Rust
+        shell: bash
+        run: |
+          cargo b -r --features=dart_ffi,sqlcipher,ledger
+      - name: Build Flutter
+        shell: bash
+        run: |
+          pushd $HOME
+          git clone --branch $FLUTTER_VERSION --depth 1 https://github.com/flutter/flutter.git
+          export PATH=$PATH:$HOME/flutter/bin
+          popd
+          flutter pub get
+          flutter pub run build_runner build -d
+          (cd warp_api; flutter pub get)
+          flutter build windows
