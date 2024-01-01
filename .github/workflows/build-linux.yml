@@ -1,0 +1,97 @@
+name: "Build Linux app"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-bin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Build vars
+        run: |
+          cat build.env >> $GITHUB_ENV
+      - name: Download params
+        run: |
+          mkdir -p $HOME/.zcash-params
+          curl https://download.z.cash/downloads/sapling-output.params --output $HOME/.zcash-params/sapling-output.params
+          curl https://download.z.cash/downloads/sapling-spend.params --output $HOME/.zcash-params/sapling-spend.params
+          ln -s $HOME/.zcash-params/* assets/
+      - name: Build Rust
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libunwind-dev libudev-dev pkg-config
+          sudo apt-get install -y clang cmake ninja-build libgtk-3-dev libsecret-1-dev libjsoncpp-dev
+          cargo b -r --features=dart_ffi,sqlcipher,ledger
+      - name: Build Flutter
+        run: |
+          pushd $HOME
+          git clone --branch $FLUTTER_VERSION --depth 1 https://github.com/flutter/flutter.git
+          export PATH=$PATH:$HOME/flutter/bin
+          popd
+          flutter pub get
+          flutter pub run build_runner build -d
+          (cd warp_api; flutter pub get)
+          flutter build linux
+          cp target/release/libwarp_api_ffi.so build/linux/x64/release/bundle/lib
+          (cd build/linux/x64/release/bundle;tar cvzf $OLDPWD/ywallet.tgz *)
+      - name: Cache archive
+        uses: actions/cache/save@v3
+        with:
+          path: ywallet.tgz
+          key: ywallet-linux-${{ github.sha }}
+
+  package-appimage:
+    runs-on: ubuntu-latest
+    needs: [build-bin]
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: Cache archive
+        uses: actions/cache/restore@v3
+        with:
+          path: ywallet.tgz
+          key: ywallet-linux-${{ github.sha }}
+      - name: Install python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Build appimage
+        run: |
+          sudo apt-get install -y binutils coreutils desktop-file-utils fakeroot fuse libgdk-pixbuf2.0-dev patchelf python3-pip python3-setuptools squashfs-tools strace util-linux zsync
+          sudo wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /usr/local/bin/appimagetool
+          sudo chmod +x /usr/local/bin/appimagetool
+          sudo pip3 install appimage-builder
+          (cd linux; appimage-builder --recipe AppImageBuilder.yml)
+      - name: Upload appimage
+        uses: actions/upload-artifact@v3
+        with:
+          name: YWallet.appimage
+          path: ./linux/*.AppImage
+          retention-days: 3
+
+  package-flatpak:
+    runs-on: ubuntu-latest
+    needs: [build-bin]
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+      - name: Cache archive
+        uses: actions/cache/restore@v3
+        with:
+          path: ywallet.tgz
+          key: ywallet-linux-${{ github.sha }}
+      - name: Flatpak
+        run: |
+          docker build -f linux/Dockerfile-flatpak -t zwallet_flatpak_sh .
+          docker run --privileged --name zwallet_flatpak_bin zwallet_flatpak_sh
+          docker cp zwallet_flatpak_bin:/root/misc/ywallet.flatpak .
+      - name: Upload appimage
+        uses: actions/upload-artifact@v3
+        with:
+          name: YWallet.flatpak
+          path: ywallet.flatpak
+          retention-days: 3

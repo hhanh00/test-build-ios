@@ -9,16 +9,13 @@ jobs:
     steps:
       - name: check Xcode version
         run: /usr/bin/xcodebuild -version
-
       - name: checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
-
       - name: Build vars
         run: |
           cat build.env >> $GITHUB_ENV
-
       - name: Build Rust
         run: |
           mkdir -p $HOME/.zcash-params
@@ -32,7 +29,6 @@ jobs:
           cargo lipo --release --features=dart_ffi --targets=aarch64-apple-ios
           mv target/aarch64-apple-ios/release/libwarp_api_ffi.a warp_api/ios
           cp zcash-sync/binding.h warp_api/ios/Classes
-
       - name: Install the Apple certificate and provisioning profile
         env:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -51,7 +47,6 @@ jobs:
           dart run build_runner build -d
           (cd warp_api; flutter pub get)
           flutter build ipa
-
       - name: Upload application
         uses: actions/upload-artifact@v3
         with:

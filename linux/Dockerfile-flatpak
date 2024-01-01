@@ -1,0 +1,16 @@
+#syntax=docker/dockerfile:1.2
+FROM hhanh00/zwallet_builder_flatpak
+
+RUN mkdir -p /root/misc
+COPY linux/build-flatpak.sh /root/misc
+COPY linux/me.hanh.zwallet.Ywallet.yml /root/misc
+COPY linux/ywallet.desktop /root/misc
+COPY linux/ywallet.metainfo.xml /root/misc
+COPY assets/icon.png /root/misc
+
+COPY ywallet.tgz /root/misc/ywallet/
+
+RUN mkdir /root/repo
+
+WORKDIR /root/misc
+ENTRYPOINT ["/root/misc/build-flatpak.sh"]
