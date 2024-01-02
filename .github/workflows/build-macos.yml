@@ -2,6 +2,9 @@ name: "Build MacOS app"
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - "v*"
 
 jobs:
   build-x86_64:
@@ -92,11 +95,12 @@ jobs:
         env:
           CERT_PWD: ${{ secrets.MACOS_PWD }}
         run: |
-          security create-keychain -p R5qx5GGokNBm build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p R5qx5GGokNBm build.keychain
-          security import ./macos/certs/codesign.p12 -k build.keychain -P $CERT_PWD -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k R5qx5GGokNBm build.keychain
+          security create-keychain -p R5qx5GGokNBm $HOME/build.keychain
+          security set-keychain-settings -ut 7200 $HOME/build.keychain
+          security default-keychain -s $HOME/build.keychain
+          security unlock-keychain -p R5qx5GGokNBm $HOME/build.keychain
+          security import ./macos/certs/codesign.p12 -k $HOME/build.keychain -P $CERT_PWD -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k R5qx5GGokNBm $HOME/build.keychain
           /usr/bin/codesign --force -s "Developer ID Application: Ycash Foundation (8VSA3BX4D8)" --deep --options runtime build/macos/Build/Products/Release/ywallet.app -v
       - name: Notarize
         env:
