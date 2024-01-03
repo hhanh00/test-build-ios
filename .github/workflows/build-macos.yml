@@ -83,14 +83,12 @@ jobs:
           cp zcash-sync/binding.h warp_api/ios/Classes/binding.h
       - name: Build
         run: |
-          pushd $HOME
-          git clone --branch $FLUTTER_VERSION --depth 1 https://github.com/flutter/flutter.git
           export PATH=$PATH:$HOME/flutter/bin
-          popd
+          (cd $HOME; git clone --branch $FLUTTER_VERSION --depth 1 https://github.com/flutter/flutter.git)
           flutter pub get
           dart run build_runner build -d
           (cd warp_api; flutter pub get)
-          flutter build macos
+          flutter build -v macos
       - name: Codesign
         env:
           CERT_PWD: ${{ secrets.MACOS_PWD }}
